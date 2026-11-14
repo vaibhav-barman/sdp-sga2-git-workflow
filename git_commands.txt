@@ -6,104 +6,110 @@ Repository: https://github.com/vaibhav-barman/sdp-sga2-git-workflow
 STEP 1 - LOCAL REPOSITORY SETUP
 --------------------------------------------------------------------------
 mkdir "SDP SGA 2"
-    Creates the project folder in /Users/vaibhavbarman/.
+    Makes the project folder inside /Users/vaibhavbarman/.
 cd "SDP SGA 2"
-    Moves the terminal into the project folder.
+    Goes into that folder so every later command runs there.
 ls -la
-    Lists all files (including hidden ones) with details, to confirm index.html and about.html exist.
+    Lists everything in the folder, hidden files too. I used it to check that index.html and about.html were there.
 git --version
-    Prints the installed Git version to confirm Git is available.
+    Prints the Git version, a quick check that Git is installed.
 git init -b main
-    Initialises a new, empty Git repository in the folder with "main" as the default branch.
+    Turns the folder into a Git repository and names the first branch main.
 git config user.name "Vaibhav Barman"
-    Sets the author name used for commits in this repository.
+    Sets the name Git writes as the author on my commits, for this repository only.
 git config user.email "181400932+vaibhav-barman@users.noreply.github.com"
-    Sets the author email (GitHub no-reply address) used for commits in this repository.
+    Sets the author email to my GitHub no-reply address so my real email stays out of the public history.
 git status
-    Shows the state of the working directory: untracked, modified and staged files.
+    Reports what Git sees right now: untracked, modified and staged files.
 
 STEP 2 - GIT WORKFLOW EXECUTION
 --------------------------------------------------------------------------
 git add index.html about.html
-    Stages both HTML files so they are included in the next commit.
+    Puts both pages in the staging area so the next commit includes them.
 git status --short
-    Shows a compact status; "A" means the file is staged as newly added.
+    Short version of status. An "A" in the first column means the file is staged as new.
 git commit -m "Initial commit: add index.html and about.html"
-    Records the staged files as the first commit (initial state of the project).
+    Saves the staged pages as the first commit, the starting state of the project.
 git diff
-    Shows unstaged line-by-line changes, used to review edits before committing.
+    Shows the exact lines I changed but have not staged yet. I ran it before each commit to review the edit.
 git add index.html
-    Stages the modified index.html.
+    Stages the edited index.html.
 git commit -m "Update index.html: add paragraph about version control"
-    Creates the second commit containing the change to index.html.
+    Saves the index.html edit as the second commit.
 git branch feature
-    Creates a new branch named "feature" at the current commit (does not switch to it).
+    Creates a branch called feature at the current commit. It does not move me onto it.
 git branch
-    Lists local branches; the current branch is marked with *.
+    Lists the local branches and puts a * next to the one I am on.
 git checkout feature
-    Switches the working directory to the "feature" branch.
+    Moves me onto the feature branch.
 git add about.html
-    Stages the modified about.html.
+    Stages the edited about.html.
 git commit -m "Feature: add skills list to about.html"
-    Commits the change on the feature branch only.
+    Saves the about.html edit on the feature branch only, so main does not have it yet.
 git log --oneline --graph --all --decorate
-    Shows a compact commit history as a graph for all branches, with branch/HEAD labels.
+    Prints the history as a small graph, one line per commit, covering every branch and showing where HEAD is.
 git checkout main
-    Switches back to the main branch (about.html returns to its pre-feature state).
+    Moves me back to main. about.html changes back to the version without the skills list.
 git merge --no-ff feature -m "Merge branch feature into main"
-    Merges feature into main; --no-ff forces a merge commit so the branch activity stays visible in history.
+    Brings the feature work into main. --no-ff makes Git record a merge commit, so the branch stays visible in the log.
 git log --stat
-    Shows full commit details and the files changed (insertions/deletions) in each commit.
+    Prints each commit in full along with the files it touched and how many lines were added or removed.
 
 STEP 3 - .gitignore IMPLEMENTATION
 --------------------------------------------------------------------------
 printf '# Ignore log files\n*.log\n\n# Ignore the temp folder\ntemp/\n' > .gitignore
-    Creates .gitignore that ignores every .log file and the temp/ folder.
+    Writes the .gitignore file with two rules: skip every .log file and skip the temp/ folder.
 echo "debug output" > app.log
-    Creates a sample .log file to prove it is ignored.
+    Makes a sample log file to test the first rule.
 mkdir -p temp && echo "cache data" > temp/cache.txt
-    Creates a temp/ folder with a file inside to prove the folder is ignored.
+    Makes a temp/ folder with a file in it to test the second rule.
 cat .gitignore
-    Prints the contents of .gitignore.
+    Prints the .gitignore file to confirm what is in it.
 git status --ignored --short
-    Lists ignored files and folders (marked "!!") alongside other changes.
+    Also lists ignored items, marked with "!!". app.log and temp/ show up this way.
 git check-ignore -v app.log temp/cache.txt
-    Shows which .gitignore rule (file and line number) matches each path.
+    Tells me which line of .gitignore matched each path.
 git add .gitignore
     Stages the .gitignore file.
 git commit -m "Add .gitignore to ignore .log files and temp/ folder"
-    Commits the .gitignore file.
+    Saves .gitignore as its own commit.
 
 STEP 4 - UNDO OPERATION
 --------------------------------------------------------------------------
 git commit -m "Add experimental banner (will be undone)"
-    Makes an additional commit (after editing and staging index.html with git add).
+    An extra commit (after editing and staging index.html) that exists only so I can undo it.
 git reset --hard HEAD~1
-    Undoes the last commit: moves the branch back one commit and discards that commit's changes in the working files.
+    Moves the branch back one commit and throws away that commit's changes in the working files. This is the undo.
 git reflog -5
-    Shows the last 5 positions of HEAD, proving the reset happened and the undone commit is still recoverable.
+    Shows the last five places HEAD pointed to. The reset is listed there, and so is the commit it removed.
 git commit -m "Add draft footer note (will be reverted)"
-    Makes another commit, used to demonstrate the safe undo method.
+    A second throwaway commit, this time for trying the other undo method.
 git revert HEAD --no-edit
-    Undoes the last commit by creating a NEW commit that reverses it; history is preserved (safe for shared/pushed branches).
+    Undoes the last commit by adding a new commit that reverses it. History stays intact, which is safer for shared branches.
 
 STEP 5 - GITHUB INTEGRATION
 --------------------------------------------------------------------------
 git add git_commands.txt
     Stages this documentation file.
 git commit -m "Add git_commands.txt documenting all Git commands used"
-    Commits the documentation file so it is part of the repository.
-(GitHub website) New repository -> name "sdp-sga2-git-workflow" -> Public -> do not add README/.gitignore/licence
-    Creates the empty public repository on GitHub AFTER the local repository already exists.
+    Saves the documentation file in the repository.
+(GitHub website) New repository -> name "sdp-sga2-git-workflow" -> Public -> leave README, .gitignore and licence unticked
+    Creates the empty public repository on GitHub, done only after the local repository already had its history.
 git remote add origin https://github.com/vaibhav-barman/sdp-sga2-git-workflow.git
-    Connects the local repository to the GitHub repository under the name "origin".
+    Links my local repository to the GitHub one under the name origin.
 git remote -v
-    Lists configured remotes and their URLs to verify the connection.
+    Lists the remotes and their URLs so I can check the link.
 git push -u origin main
-    Uploads the main branch (with all its commits) to GitHub and sets origin/main as its upstream.
+    Uploads main with all its commits and remembers origin/main as its upstream.
 git push origin feature
-    Uploads the feature branch so the branch history is visible on GitHub.
+    Uploads the feature branch too, so the branch work shows on GitHub.
 git branch -vv
-    Shows each local branch, its latest commit and the remote branch it tracks.
+    Lists each local branch with its latest commit and the remote branch it follows.
 git log --oneline --graph --all --decorate
-    Final check that the local history (including origin/* branches) matches what is on GitHub.
+    Last look at the history, now including the origin/* branches, to compare with GitHub.
+git add git_commands.txt
+    Stages this file again after I reworded the explanations.
+git commit -m "Reword explanations in git_commands.txt"
+    Saves the reworded version as a new commit.
+git push
+    Uploads that last commit to GitHub.
