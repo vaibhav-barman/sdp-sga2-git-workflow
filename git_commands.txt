@@ -1,0 +1,109 @@
+GIT COMMAND DOCUMENTATION - SDP SGA 2 (Question 1)
+Author: Vaibhav Barman (GitHub: vaibhav-barman)
+Repository: https://github.com/vaibhav-barman/sdp-sga2-git-workflow
+==========================================================================
+
+STEP 1 - LOCAL REPOSITORY SETUP
+--------------------------------------------------------------------------
+mkdir "SDP SGA 2"
+    Creates the project folder in /Users/vaibhavbarman/.
+cd "SDP SGA 2"
+    Moves the terminal into the project folder.
+ls -la
+    Lists all files (including hidden ones) with details, to confirm index.html and about.html exist.
+git --version
+    Prints the installed Git version to confirm Git is available.
+git init -b main
+    Initialises a new, empty Git repository in the folder with "main" as the default branch.
+git config user.name "Vaibhav Barman"
+    Sets the author name used for commits in this repository.
+git config user.email "181400932+vaibhav-barman@users.noreply.github.com"
+    Sets the author email (GitHub no-reply address) used for commits in this repository.
+git status
+    Shows the state of the working directory: untracked, modified and staged files.
+
+STEP 2 - GIT WORKFLOW EXECUTION
+--------------------------------------------------------------------------
+git add index.html about.html
+    Stages both HTML files so they are included in the next commit.
+git status --short
+    Shows a compact status; "A" means the file is staged as newly added.
+git commit -m "Initial commit: add index.html and about.html"
+    Records the staged files as the first commit (initial state of the project).
+git diff
+    Shows unstaged line-by-line changes, used to review edits before committing.
+git add index.html
+    Stages the modified index.html.
+git commit -m "Update index.html: add paragraph about version control"
+    Creates the second commit containing the change to index.html.
+git branch feature
+    Creates a new branch named "feature" at the current commit (does not switch to it).
+git branch
+    Lists local branches; the current branch is marked with *.
+git checkout feature
+    Switches the working directory to the "feature" branch.
+git add about.html
+    Stages the modified about.html.
+git commit -m "Feature: add skills list to about.html"
+    Commits the change on the feature branch only.
+git log --oneline --graph --all --decorate
+    Shows a compact commit history as a graph for all branches, with branch/HEAD labels.
+git checkout main
+    Switches back to the main branch (about.html returns to its pre-feature state).
+git merge --no-ff feature -m "Merge branch feature into main"
+    Merges feature into main; --no-ff forces a merge commit so the branch activity stays visible in history.
+git log --stat
+    Shows full commit details and the files changed (insertions/deletions) in each commit.
+
+STEP 3 - .gitignore IMPLEMENTATION
+--------------------------------------------------------------------------
+printf '# Ignore log files\n*.log\n\n# Ignore the temp folder\ntemp/\n' > .gitignore
+    Creates .gitignore that ignores every .log file and the temp/ folder.
+echo "debug output" > app.log
+    Creates a sample .log file to prove it is ignored.
+mkdir -p temp && echo "cache data" > temp/cache.txt
+    Creates a temp/ folder with a file inside to prove the folder is ignored.
+cat .gitignore
+    Prints the contents of .gitignore.
+git status --ignored --short
+    Lists ignored files and folders (marked "!!") alongside other changes.
+git check-ignore -v app.log temp/cache.txt
+    Shows which .gitignore rule (file and line number) matches each path.
+git add .gitignore
+    Stages the .gitignore file.
+git commit -m "Add .gitignore to ignore .log files and temp/ folder"
+    Commits the .gitignore file.
+
+STEP 4 - UNDO OPERATION
+--------------------------------------------------------------------------
+git commit -m "Add experimental banner (will be undone)"
+    Makes an additional commit (after editing and staging index.html with git add).
+git reset --hard HEAD~1
+    Undoes the last commit: moves the branch back one commit and discards that commit's changes in the working files.
+git reflog -5
+    Shows the last 5 positions of HEAD, proving the reset happened and the undone commit is still recoverable.
+git commit -m "Add draft footer note (will be reverted)"
+    Makes another commit, used to demonstrate the safe undo method.
+git revert HEAD --no-edit
+    Undoes the last commit by creating a NEW commit that reverses it; history is preserved (safe for shared/pushed branches).
+
+STEP 5 - GITHUB INTEGRATION
+--------------------------------------------------------------------------
+git add git_commands.txt
+    Stages this documentation file.
+git commit -m "Add git_commands.txt documenting all Git commands used"
+    Commits the documentation file so it is part of the repository.
+(GitHub website) New repository -> name "sdp-sga2-git-workflow" -> Public -> do not add README/.gitignore/licence
+    Creates the empty public repository on GitHub AFTER the local repository already exists.
+git remote add origin https://github.com/vaibhav-barman/sdp-sga2-git-workflow.git
+    Connects the local repository to the GitHub repository under the name "origin".
+git remote -v
+    Lists configured remotes and their URLs to verify the connection.
+git push -u origin main
+    Uploads the main branch (with all its commits) to GitHub and sets origin/main as its upstream.
+git push origin feature
+    Uploads the feature branch so the branch history is visible on GitHub.
+git branch -vv
+    Shows each local branch, its latest commit and the remote branch it tracks.
+git log --oneline --graph --all --decorate
+    Final check that the local history (including origin/* branches) matches what is on GitHub.
